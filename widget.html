@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Day & Streak Counter</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@500&display=swap');
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      width: 100%;
+      height: 100%;
+      font-family: 'Quicksand', sans-serif;
+      background: linear-gradient(135deg, #fdfcfb 0%, #e2d1c3 100%);
+      color: #333;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .container {
+      width: 90%;
+      max-width: 400px;
+      padding: 5vw;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+
+    .counter {
+      font-size: 6vw;
+      min-font-size: 1.2rem;
+      margin: 1em 0 0.3em;
+    }
+
+    .label {
+      font-size: 4vw;
+      color: #555;
+      margin-bottom: 1.5em;
+    }
+
+    button {
+      padding: 10px 20px;
+      font-size: 1em;
+      background-color: #6c5ce7;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      width: 100%;
+    }
+
+    button:hover {
+      background-color: #5a4bcf;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div class="counter">
+      DAY <span id="dayCount">0</span>
+    </div>
+    <div class="label">Since May 3, 2025</div>
+
+    <div class="counter">
+      STREAK <span id="streakCount">0</span>
+    </div>
+    <div class="label">(Resets if a day is missed)</div>
+
+    <button onclick="markDone()">Mark Today as Done</button>
+  </div>
+
+  <script>
+    const START_DATE = new Date("2025-05-03");
+    const today = new Date();
+    const dayCount = Math.floor((today - START_DATE) / (1000 * 60 * 60 * 24)) + 1;
+    document.getElementById("dayCount").innerText = dayCount;
+
+    const STORAGE_KEY = "habitTracker";
+    const data = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {
+      lastDone: null,
+      streak: 0
+    };
+
+    function isSameDay(date1, date2) {
+      return date1?.toDateString() === date2?.toDateString();
+    }
+
+    const lastDoneDate = data.lastDone ? new Date(data.lastDone) : null;
+    const yesterday = new Date();
+    yesterday.setDate(today.getDate() - 1);
+
+    if (isSameDay(lastDoneDate, today)) {
+      // already done today
+    } else if (isSameDay(lastDoneDate, yesterday)) {
+      // continue streak
+    } else {
+      data.streak = 0;
+    }
+
+    document.getElementById("streakCount").innerText = data.streak;
+
+    function markDone() {
+      if (!isSameDay(lastDoneDate, today)) {
+        if (isSameDay(lastDoneDate, yesterday)) {
+          data.streak++;
+        } else {
+          data.streak = 1;
+        }
+        data.lastDone = today.toISOString();
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+        document.getElementById("streakCount").innerText = data.streak;
+        alert("Marked as done for today.");
+      } else {
+        alert("Already marked today.");
+      }
+    }
+  </script>
+
+</body>
+</html>
