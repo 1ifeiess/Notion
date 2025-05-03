@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Vintage Focus Hub</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Quicksand:wght@500;600&display=swap');
+
+    :root {
+      --vintage-brown: #8B6B4A;
+      --milky-cream: #F5F0E6;
+      --dark-brown: #5D4037;
+      --light-brown: #A1887F;
+      --accent-gold: #D4AF37;
+    }
+
+    body {
+      font-family: 'Cormorant Garamond', serif;
+      background-color: var(--milky-cream);
+      margin: 0;
+      padding: 20px;
+      color: var(--dark-brown);
+      overflow: hidden;
+    }
+
+    .main-container {
+      display: flex;
+      flex-direction: column;
+      max-width: 800px;
+      margin: 0 auto;
+      background-color: rgba(255, 253, 245, 0.9);
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(139, 107, 74, 0.15);
+      border: 1px solid var(--light-brown);
+      overflow: hidden;
+    }
+
+    .header {
+      background-color: var(--vintage-brown);
+      color: var(--milky-cream);
+      padding: 15px 25px;
+      text-align: center;
+      border-bottom: 2px solid var(--accent-gold);
+    }
+
+    .header h1 {
+      margin: 0;
+      font-size: 1.8rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+    }
+
+    .content {
+      display: flex;
+      flex-direction: column;
+      padding: 20px;
+    }
+
+    .tracker-section {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      background: rgba(139, 107, 74, 0.08);
+      padding: 15px;
+      border-radius: 12px;
+      border: 1px dashed var(--light-brown);
+    }
+
+    .day-streak {
+      font-family: 'Quicksand', sans-serif;
+      text-align: center;
+    }
+
+    .day {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--dark-brown);
+      margin-bottom: 0.2em;
+    }
+
+    .streak {
+      font-size: 1rem;
+      color: var(--vintage-brown);
+    }
+
+    .pomodoro-section {
+      text-align: center;
+      margin-bottom: 25px;
+      padding: 20px;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(139, 107, 74, 0.1);
+      border: 1px solid var(--light-brown);
+    }
+
+    .timer {
+      font-size: 3.5rem;
+      font-weight: 600;
+      margin: 15px 0;
+      color: var(--dark-brown);
+      font-family: 'Quicksand', sans-serif;
+    }
+
+    .controls {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    button {
+      padding: 10px 20px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 600;
+      transition: all 0.2s;
+      box-shadow: 0 2px 4px rgba(93, 64, 55, 0.2);
+    }
+
+    .start { 
+      background-color: var(--vintage-brown); 
+      color: white; 
+    }
+    .start:hover { background-color: #7A5A3D; }
+
+    .pause { 
+      background-color: var(--light-brown); 
+      color: white; 
+    }
+    .pause:hover { background-color: #8D6E63; }
+
+    .reset { 
+      background-color: var(--dark-brown); 
+      color: white; 
+    }
+    .reset:hover { background-color: #4E342E; }
+
+    .dropdowns {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    select {
+      padding: 8px 15px;
+      font-size: 1rem;
+      border-radius: 8px;
+      border: 1px solid var(--light-brown);
+      background-color: white;
+      color: var(--dark-brown);
+      font-family: 'Cormorant Garamond', serif;
+      cursor: pointer;
+    }
+
+    .sounds-section {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 2px 8px rgba(139, 107, 74, 0.1);
+      border: 1px solid var(--light-brown);
+    }
+
+    .sounds-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+
+    .sounds-header h2 {
+      margin: 0;
+      font-size: 1.4rem;
+      color: var(--dark-brown);
+    }
+
+    .reset-sounds {
+      background-color: var(--dark-brown);
+      color: white;
+      padding: 6px 12px;
+      font-size: 0.9rem;
+    }
+
+    .sound-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 12px;
+    }
+
+    .sound-control {
+      display: flex;
+      flex-direction: column;
+      background: rgba(139, 107, 74, 0.05);
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid rgba(139, 107, 74, 0.2);
+    }
+
+    .sound-label {
+      display: flex;
+      align-items: center;
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+
+    .sound-checkbox {
+      margin-right: 8px;
+      accent-color: var(--vintage-brown);
+      width: 16px;
+      height: 16px;
+    }
+
+    .sound-slider {
+      width: 100%;
+      height: 6px;
+      -webkit-appearance: none;
+      background: rgba(139, 107, 74, 0.2);
+      border-radius: 3px;
+      outline: none;
+    }
+
+    .sound-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: var(--vintage-brown);
+      cursor: pointer;
+    }
+
+    /* Hide scrollbars for Notion embed */
+    body::-webkit-scrollbar {
+      display: none;
+    }
+    body {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="main-container">
+    <div class="header">
+      <h1>Vintage Focus Hub</h1>
+    </div>
+
+    <div class="content">
+      <div class="tracker-section" id="trackerCard">
+        <div class="day-streak">
+          <div class="day">DAY <span id="dayCount">0</span></div>
+          <div class="streak">STREAK <span id="streakCount">0</span></div>
+        </div>
+      </div>
+
+      <div class="pomodoro-section">
+        <div class="timer" id="timer">25:00</div>
+        
+        <div class="controls">
+          <button class="start" onclick="startTimer()">▶ Start</button>
+          <button class="pause" onclick="pauseTimer()">⏸ Pause</button>
+          <button class="reset" onclick="resetTimer()">↩ Reset</button>
+        </div>
+        
+        <div class="dropdowns">
+          <select id="durationSelect" onchange="updateDuration()">
+            <option value="1500">25 min</option>
+            <option value="1800">30 min</option>
+            <option value="2700">45 min</option>
+            <option value="3600">60 min</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="sounds-section">
+        <div class="sounds-header">
+          <h2>Ambient Sound Mixer</h2>
+          <button class="reset-sounds" onclick="resetAllSounds()">Reset All</button>
+        </div>
+        
+        <div class="sound-grid" id="soundContainer">
+          <!-- Sound controls will be generated here -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ====================== DAY/STREAK TRACKER ======================
+    const START_DATE = new Date("2025-05-03");
+    const today = new Date();
+    const dayCount = Math.floor((today - START_DATE) / (1000 * 60 * 60 * 24)) + 1;
+    document.getElementById("dayCount").innerText = dayCount;
+
+    const STORAGE_KEY = "habitTracker";
+    const data = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {
+      lastDone: null,
+      streak: 0
+    };
+
+    function isSameDay(d1, d2) {
+      return d1?.toDateString() === d2?.toDateString();
+    }
+
+    const lastDone = data.lastDone ? new Date(data.lastDone) : null;
+    const yesterday = new Date();
+    yesterday.setDate(today.getDate() - 1);
+
+    // Reset streak if missed a day
+    if (!isSameDay(lastDone, today) && !isSameDay(lastDone, yesterday)) {
+      data.streak = 0;
+    }
+
+    document.getElementById("streakCount").innerText = data.streak;
+
+    // Triple-click logic
+    let clickCount = 0;
+    let clickTimer;
+
+    document.getElementById("trackerCard").addEventListener("click", () => {
+      clickCount++;
+      clearTimeout(clickTimer);
+      clickTimer = setTimeout(() => clickCount = 0, 600); // reset after 600ms
+
+      if (clickCount === 3) {
+        const newDate = new Date();
+        if (!isSameDay(lastDone, today)) {
+          if (isSameDay(lastDone, yesterday)) {
+            data.streak++;
+          } else {
+            data.streak = 1;
+          }
+          data.lastDone = newDate.toISOString();
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+          document.getElementById("streakCount").innerText = data.streak;
+          
+          // Visual feedback
+          const tracker = document.getElementById("trackerCard");
+          tracker.style.backgroundColor = "rgba(139, 107, 74, 0.15)";
+          setTimeout(() => {
+            tracker.style.backgroundColor = "rgba(139, 107, 74, 0.08)";
+          }, 300);
+        }
+        clickCount = 0;
+      }
+    });
+
+    // ====================== POMODORO TIMER ======================
+    let countdown;
+    let duration = 1500; // default 25 minutes
+    let timeLeft = duration;
+    const audioObjects = {};
+
+    function updateTimerDisplay() {
+      const minutes = String(Math.floor(timeLeft / 60)).padStart(2, '0');
+      const seconds = String(timeLeft % 60).padStart(2, '0');
+      document.getElementById('timer').textContent = `${minutes}:${seconds}`;
+      
+      // Flash red when timer ends
+      if (timeLeft === 0) {
+        document.getElementById('timer').style.color = '#D32F2F';
+        pauseAllSounds();
+      } else {
+        document.getElementById('timer').style.color = 'var(--dark-brown)';
+      }
+    }
+
+    function startTimer() {
+      clearInterval(countdown);
+      countdown = setInterval(() => {
+        if (timeLeft <= 0) {
+          clearInterval(countdown);
+          timeLeft = duration;
+          updateTimerDisplay();
+          return;
+        }
+        timeLeft--;
+        updateTimerDisplay();
+      }, 1000);
+    }
+
+    function pauseTimer() {
+      clearInterval(countdown);
+    }
+
+    function resetTimer() {
+      clearInterval(countdown);
+      timeLeft = duration;
+      updateTimerDisplay();
+    }
+
+    function updateDuration() {
+      const select = document.getElementById('durationSelect');
+      duration = parseInt(select.value);
+      resetTimer();
+    }
+
+    // ====================== SOUND PLAYER ======================
+    const sounds = {
+      storm: {
+        label: "Storm Wind",
+        url: "https://dl.dropboxusercontent.com/scl/fi/t0e1yst6ri2kgdeuvr4oz/winter-storm-winnd.-128kbit_AAC-Copy.mp3?rlkey=m3cjp379ormcq841b5mvic67f&st=wm92826w"
+      },
+      underwater: {
+        label: "Underwater",
+        url: "https://dl.dropboxusercontent.com/scl/fi/9wg6spf112pcoahl351xk/Underwater-deep-128kbit_AAC-Copy.mp3?rlkey=1w2ffm3skrfte7rmjttdtvjde&st=blg5hfor"
+      },
+      pink1: {
+        label: "Pink Noise",
+        url: "https://dl.dropboxusercontent.com/scl/fi/p839yniedfnvtnyrgx36a/Soothing-Deep-Pink-Noise-1-Hour-128kbit_AAC.mp3?rlkey=bqu0nd26xi2dlcv5kjz835hlt&st=gjhaks46"
+      },
+      "40hz": {
+        label: "40Hz Focus",
+        url: "https://dl.dropboxusercontent.com/scl/fi/dijox7y62pu9uetmis57v/Pure-40-HZ-Binaural-Beats-The-Frequency-for-FOCUS-MEMORY-and-CONCENTRATION-152kbit_Opus.mp3?rlkey=nhl8vemqqlra200anhm0akha3&st=i7vx7sbx"
+      },
+      waves: {
+        label: "Ocean Waves",
+        url: "https://dl.dropboxusercontent.com/scl/fi/dzlfgeot1wnmltr30a5d0/Ocean-Waves-Crashing-Relaxing-Sounds-Calming-Relaxation-Music-For-Sleeping-1-Hour-128kbit_AAC.mp3?rlkey=d1u1rvrsh33mxd5bt7dqdax85&st=xl73rlix"
+      },
+      rain1: {
+        label: "Heavy Rain",
+        url: "https://dl.dropboxusercontent.com/scl/fi/shaxkilte99tc95qh1jy0/Heavy-Rain-Thunder-Rain-sounds-for-Sleep-1-hour-rain-sounds-for-sleep-128kbit_AAC.mp3?rlkey=5ddrqns1w19aq5btwzmqtlpxk&st=x2n5pvz4"
+      },
+      gamma: {
+        label: "Gamma 40Hz",
+        url: "https://dl.dropboxusercontent.com/scl/fi/atfts57o1hilnb9slb5n9/Gamma-for-a-Genius-Brain-1hr-Pure-Binaural-Beat-Session-at-40Hz-Intervals-128kbit_AAC.mp3?rlkey=5gvtywwvrglqzhsm38hrmgyjv&st=ixn8rfls"
+      },
+      forest: {
+        label: "Forest",
+        url: "https://dl.dropboxusercontent.com/scl/fi/7smjcxu5qav2degjrnzxt/Forest-Sounds-Woodland-Ambience-Bird-Song-128kbit_AAC.mp3?rlkey=cj7rnm1i30o9w3jbhm3752u7f&st=tov0nuaf"
+      },
+      brown: {
+        label: "Brown Noise",
+        url: "https://dl.dropboxusercontent.com/scl/fi/2esrnlk5ww7g52dbjo7fl/Deep-Layered-Brown-Noise-1-Hour-128kbit_AAC.mp3?rlkey=o0ujag1fwuwudg67ent3gojdb&st=x7uwvmg6"
+      },
+      rain2: {
+        label: "Rain Drops",
+        url: "https://dl.dropboxusercontent.com/scl/fi/wuhdd8vlguwer1wc8phcp/Calming-Sound-of-Rain-in-Foggy-Forest-1-Hour-Rain-Drops-Falling-From-Trees-128kbit_AAC.mp3?rlkey=entpjl4s0wdwsrs4u9s5ikqth&st=wv31pqbe"
+      },
+      pink2: {
+        label: "Pink Sleep",
+        url: "https://dl.dropboxusercontent.com/scl/fi/wopk1mmh4tjl3fwvf7qb3/1-HOUR-Pink-Noise-for-Deep-Sleep-Black-Screen-No-Music-Sound-Blocker-128kbit_AAC.mp3?rlkey=3a6uhi9yshjcdyrnhhfc1y3u3&st=9544029g"
+      },
+      stream: {
+        label: "Mountain Stream",
+        url: "https://dl.dropboxusercontent.com/scl/fi/dk332pfqff161r51brwc4/1-Hour-Forest-River-Water-Sounds-Relaxing-Mountain-Stream-Waterfall-Sound-Sleeping-Meditation-128kbit_AAC.mp3?rlkey=4deymccx9gxuq4b8stomnsgjt&st=uz00smoe"
+      },
+      fire: {
+        label: "Fireplace",
+        url: "https://dl.dropboxusercontent.com/scl/fi/lw1vtvg45nserdygf5ijr/1-hour-Fireplace-burning-Logs-relaxing-with-sound-160kbit_Opus.mp3?rlkey=gk3l9spzlo95jeym260v823sx&st=1io9ifwf"
+      },
+      pink3: {
+        label: "Pink Focus",
+        url: "https://dl.dropboxusercontent.com/scl/fi/xl7w5yuqsbjt2jt5wocs2/1-HOUR-Pink-Noise-Improve-Memory-Focus-Sleep-Sounds-for-Relaxation-Sleep-or-Studying-128kbit_AAC.mp3?rlkey=k53lxgy359wjlvti49wdj3sao&st=70uvxkuf"
+      }
+    };
+
+    const container = document.getElementById('soundContainer');
+
+    // Create audio elements and UI dynamically
+    for (let key in sounds) {
+      const { label, url } = sounds[key];
+      const audio = new Audio(url);
+      audio.loop = true;
+      audio.volume = 0.5;
+      audioObjects[key] = audio;
+
+      const control = document.createElement('div');
+      control.className = 'sound-control';
+      control.innerHTML = `
+        <div class="sound-label">
+          <input type="checkbox" class="sound-checkbox" id="${key}-checkbox" onchange="toggleSound('${key}')">
+          <label for="${key}-checkbox">${label}</label>
+        </div>
+        <input type="range" min="0" max="1" step="0.01" value="0.5" 
+               class="sound-slider" oninput="setVolume('${key}', this.value)">
+      `;
+      container.appendChild(control);
+    }
+
+    function toggleSound(key) {
+      const audio = audioObjects[key];
+      const checkbox = document.getElementById(`${key}-checkbox`);
+      
+      if (checkbox.checked) {
+        audio.play().catch(e => console.warn(`Couldn't play ${key}:`, e));
+      } else {
+        audio.pause();
+        audio.currentTime = 0;
+      }
+    }
+
+    function setVolume(key, volume) {
+      audioObjects[key].volume = volume;
+    }
+
+    function pauseAllSounds() {
+      for (let key in audioObjects) {
+        const audio = audioObjects[key];
+        audio.pause();
+        audio.currentTime = 0;
+        document.getElementById(`${key}-checkbox`).checked = false;
+      }
+    }
+
+    function resetAllSounds() {
+      pauseAllSounds();
+      document.querySelectorAll('.sound-slider').forEach(slider => {
+        slider.value = 0.5;
+      });
+      for (let key in audioObjects) {
+        audioObjects[key].volume = 0.5;
+      }
+    }
+
+    // Unlock audio on first interaction
+    document.body.addEventListener('click', () => {
+      for (let key in audioObjects) {
+        const audio = audioObjects[key];
+        audio.play().then(() => {
+          audio.pause();
+          audio.currentTime = 0;
+        }).catch(() => {});
+      }
+    }, { once: true });
+
+    // Initialize
+    updateTimerDisplay();
+  </script>
+</body>
+</html>
