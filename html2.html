@@ -233,21 +233,21 @@ function updateDuration() { duration = parseInt(document.getElementById('duratio
 
 // ===== SOUND PLAYER =====
 const sounds = {
-  storm: {label:"Storm Wind", url:"https://dl.dropboxusercontent.com/scl/fi/t0e1yst6ri2kgdeuvr4oz/winter-storm-winnd.-128kbit_AAC-Copy.mp3?rlkey=m3cjp379ormcq841b5mvic67f&st=wm92826w"},
-  underwater: {label:"Underwater", url:"https://dl.dropboxusercontent.com/scl/fi/9wg6spf112pcoahl351xk/Underwater-deep-128kbit_AAC-Copy.mp3?rlkey=1w2ffm3skrfte7rmjttdtvjde&st=blg5hfor"},
-  pink1: {label:"Pink Noise", url:"https://dl.dropboxusercontent.com/scl/fi/p839yniedfnvtnyrgx36a/Soothing-Deep-Pink-Noise-1-Hour-128kbit_AAC.mp3?rlkey=bqu0nd26xi2dlcv5kjz835hlt&st=gjhaks46"},
-  "40hz": {label:"40Hz Focus", url:"https://dl.dropboxusercontent.com/scl/fi/dijox7y62pu9uetmis57v/Pure-40-HZ-Binaural-Beats-The-Frequency-for-FOCUS-MEMORY-and-CONCENTRATION-152kbit_Opus.mp3?rlkey=nhl8vemqqlra200anhm0akha3&st=i7vx7sbx"},
-  waves: {label:"Ocean Waves", url:"https://dl.dropboxusercontent.com/scl/fi/dzlfgeot1wnmltr30a5d0/Ocean-Waves-Crashing-Relaxing-Sounds-Calming-Relaxation-Music-For-Sleeping-1-Hour-128kbit_AAC.mp3?rlkey=d1u1rvrsh33mxd5bt7dqdax85&st=xl73rlix"},
-  rain1: {label:"Heavy Rain", url:"https://dl.dropboxusercontent.com/scl/fi/shaxkilte99tc95qh1jy0/Heavy-Rain-Thunder-Rain-sounds-for-Sleep-1-hour-rain-sounds-for-sleep-128kbit_AAC.mp3?rlkey=5ddrqns1w19aq5btwzmqtlpxk&st=x2n5pvz4"},
-  gamma: {label:"Gamma 40Hz", url:"https://dl.dropboxusercontent.com/scl/fi/atfts57o1hilnb9slb5n9/Gamma-for-a-Genius-Brain-1hr-Pure-Binaural-Beat-Session-at-40Hz-Intervals-128kbit_AAC.mp3?rlkey=5gvtywwvrglqzhsm38hrmgyjv&st=ixn8rfls"},
-  forest: {label:"Forest", url:"https://dl.dropboxusercontent.com/scl/fi/7smjcxu5qav2degjrnzxt/Forest-Sounds-Woodland-Ambience-Bird-Song-128kbit_AAC.mp3?rlkey=cj7rnm1i30o9w3jbhm3752u7f&st=tov0nuaf"},
-  brown: {label:"Brown Noise", url:"https://dl.dropboxusercontent.com/scl/fi/2esrnlk5ww7g52dbjo7fl/Deep-Layered-Brown-Noise-1-Hour-128kbit_AAC.mp3?rlkey=o0ujag1fwuwudg67ent3gojdb&st=x7uwvmg6"},
-  rain2: {label:"Rain Drops", url:"https://dl.dropboxusercontent.com/scl/fi/wuhdd8vlguwer1wc8phcp/Calming-Sound-of-Rain-in-Foggy-Forest-1-Hour-Rain-Drops-Falling-From-Trees-128kbit_AAC.mp3?rlkey=entpjl4s0wdwsrs4u9s5ikqth&st=wv31pqbe"},
-  pink2: {label:"Pink Sleep", url:"https://dl.dropboxusercontent.com/scl/fi/wopk1mmh4tjl3fwvf7qb3/1-HOUR-Pink-Noise-for-Deep-Sleep-Black-Screen-No-Music-Sound-Blocker-128kbit_AAC.mp3?rlkey=3a6uhi9yshjcdyrnhhfc1y3u3&st=9544029g"},
-  stream: {label:"Mountain Stream", url:"https://dl.dropboxusercontent.com/scl/fi/dk332pfqff161r51brwc4/1-Hour-Forest-River-Water-Sounds-Relaxing-Mountain-Stream-Waterfall-Sound-Sleeping-Meditation-128kbit_AAC.mp3?rlkey=4deymccx9gxuq4b8stomnsgjt&st=uz00smoe"},
-  fire: {label:"Fireplace", url:"https://dl.dropboxusercontent.com/scl/fi/lw1vtvg45nserdygf5ijr/1-hour-Fireplace-burning-Logs-relaxing-with-sound-160kbit_Opus.mp3?rlkey=gk3l9spzlo95jeym260v823sx&st=1io9ifwf"},
-  pink3: {label:"Pink Focus", url:"https://dl.dropboxusercontent.com/scl/fi/xl7w5yuqsbjt2jt5wocs2/1-HOUR-Pink-Noise-Improve-Memory-Focus-Sleep-Sounds-for-Relaxation-Sleep-or-Studying-128kbit_AAC.mp3?rlkey=k53lxgy359wjlvti49wdj3sao&st=70uvxkuf"}
-};
+  storm: {label:"Storm Wind", url:"https://www.dropbox.com/scl/fi/t0e1yst6ri2kgdeuvr4oz/winter-storm-winnd.-128kbit_AAC-Copy.mp3?rlkey=m3cjp379ormcq841b5mvic67f&dl=0"},
+underwater: {label:"Underwater", url:"https://dl.dropboxusercontent.com/scl/fi/9wg6spf112pcoahl351xk/Underwater-deep-128kbit_AAC-Copy.mp3?rlkey=1w2ffm3skrfte7rmjttdtvjde&st=blg5hfor"},
+pink1: {label:"Pink Noise", url:"https://www.dropbox.com/scl/fi/p839yniedfnvtnyrgx36a/Soothing-Deep-Pink-Noise-1-Hour-128kbit_AAC.mp3?rlkey=bqu0nd26xi2dlcv5kjz835hlt&dl=0"},
+"40hz": {label:"40Hz Focus", url:"https://www.dropbox.com/scl/fi/dijox7y62pu9uetmis57v/Pure-40-HZ-Binaural-Beats-The-Frequency-for-FOCUS-MEMORY-and-CONCENTRATION-152kbit_Opus.mp3?rlkey=nhl8vemqqlra200anhm0akha3&dl=0"},
+waves: {label:"Ocean Waves", url:"https://www.dropbox.com/scl/fi/dzlfgeot1wnmltr30a5d0/Ocean-Waves-Crashing-Relaxing-Sounds-Calming-Relaxation-Music-For-Sleeping-1-Hour-128kbit_AAC.mp3?rlkey=d1u1rvrsh33mxd5bt7dqdax85&dl=0"},
+rain1: {label:"Heavy Rain", url:"https://dl.dropboxusercontent.com/scl/fi/shaxkilte99tc95qh1jy0/Heavy-Rain-Thunder-Rain-sounds-for-Sleep-1-hour-rain-sounds-for-sleep-128kbit_AAC.mp3?rlkey=5ddrqns1w19aq5btwzmqtlpxk&st=x2n5pvz4"},
+gamma: {label:"Gamma 40Hz", url:"https://www.dropbox.com/scl/fi/atfts57o1hilnb9slb5n9/Gamma-for-a-Genius-Brain-1hr-Pure-Binaural-Beat-Session-at-40Hz-Intervals-128kbit_AAC.mp3?rlkey=5gvtywwvrglqzhsm38hrmgyjv&dl=0"},
+forest: {label:"Forest", url:"https://www.dropbox.com/scl/fi/7smjcxu5qav2degjrnzxt/Forest-Sounds-Woodland-Ambience-Bird-Song-128kbit_AAC.mp3?rlkey=cj7rnm1i30o9w3jbhm3752u7f&dl=0"},
+brown: {label:"Brown Noise", url:"https://www.dropbox.com/scl/fi/2esrnlk5ww7g52dbjo7fl/Deep-Layered-Brown-Noise-1-Hour-128kbit_AAC.mp3?rlkey=o0ujag1fwuwudg67ent3gojdb&dl=0"},
+rain2: {label:"Rain Drops", url:"https://www.dropbox.com/scl/fi/wuhdd8vlguwer1wc8phcp/Calming-Sound-of-Rain-in-Foggy-Forest-1-Hour-Rain-Drops-Falling-From-Trees-128kbit_AAC.mp3?rlkey=entpjl4s0wdwsrs4u9s5ikqth&dl=0"},
+pink2: {label:"Pink Sleep", url:"https://www.dropbox.com/scl/fi/wopk1mmh4tjl3fwvf7qb3/1-HOUR-Pink-Noise-for-Deep-Sleep-Black-Screen-No-Music-Sound-Blocker-128kbit_AAC.mp3?rlkey=3a6uhi9yshjcdyrnhhfc1y3u3&dl=0"},
+stream: {label:"Mountain Stream", url:"https://www.dropbox.com/scl/fi/dk332pfqff161r51brwc4/1-Hour-Forest-River-Water-Sounds-Relaxing-Mountain-Stream-Waterfall-Sound-Sleeping-Meditation-128kbit_AAC.mp3?rlkey=4deymccx9gxuq4b8stomnsgjt&dl=0"},
+fire: {label:"Fireplace", url:"https://www.dropbox.com/scl/fi/lw1vtvg45nserdygf5ijr/1-hour-Fireplace-burning-Logs-relaxing-with-sound-160kbit_Opus.mp3?rlkey=gk3l9spzlo95jeym260v823sx&dl=0"},
+pink3: {label:"Pink Focus", url:"https://www.dropbox.com/scl/fi/xl7w5yuqsbjt2jt5wocs2/1-HOUR-Pink-Noise-Improve-Memory-Focus-Sleep-Sounds-for-Relaxation-Sleep-or-Studying-128kbit_AAC.mp3?rlkey=k53lxgy359wjlvti49wdj3sao&dl=0"}
+
 
 const container = document.getElementById('soundContainer');
 for (let key in sounds) {
