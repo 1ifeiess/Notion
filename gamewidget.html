@@ -97,14 +97,15 @@
       background: var(--dark);
       color: white;
     }
-    input, select, textarea {
-      padding: 6px 12px;
-      border-radius: 6px;
-      border: 1px solid var(--light);
-      width: 100%;
-      margin-bottom: 8px;
-      font-family: inherit;
-    }
+  input, select, textarea {
+  box-sizing: border-box; /* Add this line first */
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: 1px solid var(--light);
+  width: 100%;
+  margin-bottom: 8px;
+  font-family: inherit;
+}
     .task, .reward {
       padding: 8px;
       margin-bottom: 8px;
@@ -170,6 +171,17 @@
     }
     body::-webkit-scrollbar { display: none; }
     body { -ms-overflow-style: none; scrollbar-width: none; }
+
+    
+    /* Add these new rules at the end of the style section */
+    .hour-minute-container {
+      display: flex;
+      gap: 8px;
+    }
+    .hour-minute-container input {
+      width: calc(50% - 4px);
+    }
+    
   </style>
 </head>
 <body>
@@ -203,9 +215,9 @@
         <h3 class="section-title">New Quest</h3>
         <input type="text" id="taskInput" placeholder="What's your quest?">
         <input type="number" id="xpInput" placeholder="XP Reward" min="1">
-        <div style="display: flex; gap: 8px;">
-          <input type="number" id="hoursInput" placeholder="Hours" min="0" style="width: 50%;">
-          <input type="number" id="minutesInput" placeholder="Minutes" min="0" style="width: 50%;">
+        <div class="hour-minute-container">
+          <input type="number" id="hoursInput" placeholder="Hours" min="0">
+          <input type="number" id="minutesInput" placeholder="Minutes" min="0">
         </div>
         <input type="number" id="penaltyInput" placeholder="XP Penalty" min="0">
         <button class="add-btn" onclick="addTask()">Add Quest</button>
