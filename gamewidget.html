@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Quest Forge</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500&family=Quicksand:wght@500&display=swap');
+    :root {
+      --brown: #8B6B4A;
+      --cream: #F5F0E6;
+      --dark: #5D4037;
+      --light: #A1887F;
+      --gold: #D4AF37;
+      --red: #D32F2F;
+    }
+    body {
+      font-family: 'Cormorant Garamond', serif;
+      background: var(--cream);
+      margin: 0;
+      padding: 10px;
+      color: var(--dark);
+      overflow: hidden;
+    }
+    .container {
+      max-width: 700px;
+      margin: 0 auto;
+      background: rgba(255,253,245,0.9);
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(139,107,74,0.1);
+      border: 1px solid var(--light);
+      overflow: hidden;
+    }
+    .header {
+      background: var(--brown);
+      color: var(--cream);
+      padding: 12px;
+      text-align: center;
+      border-bottom: 2px solid var(--gold);
+    }
+    .header h1 {
+      margin: 0;
+      font-size: 1.5rem;
+    }
+    .content { padding: 15px; }
+    .stats {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 15px;
+      background: rgba(139,107,74,0.08);
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px dashed var(--light);
+    }
+    .xp {
+      font-family: 'Quicksand', sans-serif;
+      text-align: center;
+      font-size: 1.2rem;
+    }
+    .level {
+      font-family: 'Quicksand', sans-serif;
+      text-align: center;
+      font-size: 1.2rem;
+      color: var(--gold);
+    }
+    .section {
+      background: white;
+      border-radius: 8px;
+      padding: 15px;
+      margin-bottom: 15px;
+      border: 1px solid var(--light);
+    }
+    .section-title {
+      margin-top: 0;
+      border-bottom: 1px solid var(--light);
+      padding-bottom: 5px;
+    }
+    button {
+      padding: 8px 15px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+    .add-btn { 
+      background: var(--brown); 
+      color: white; 
+      margin-top: 10px;
+    }
+    .complete-btn {
+      background: var(--gold);
+      color: var(--dark);
+    }
+    .buy-btn {
+      background: var(--dark);
+      color: white;
+    }
+    input, select, textarea {
+      padding: 6px 12px;
+      border-radius: 6px;
+      border: 1px solid var(--light);
+      width: 100%;
+      margin-bottom: 8px;
+      font-family: inherit;
+    }
+    .task, .reward {
+      padding: 8px;
+      margin-bottom: 8px;
+      border-radius: 6px;
+      border: 1px solid rgba(139,107,74,0.2);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .level-img {
+      width: 40px;
+      height: 40px;
+      object-fit: cover;
+      border-radius: 4px;
+      margin-right: 10px;
+    }
+    .tabs {
+      display: flex;
+      margin-bottom: 15px;
+      overflow-x: auto;
+    }
+    .tab {
+      padding: 8px 15px;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      white-space: nowrap;
+    }
+    .tab.active {
+      border-bottom: 2px solid var(--brown);
+      font-weight: bold;
+    }
+    .tab-content {
+      display: none;
+    }
+    .tab-content.active {
+      display: block;
+    }
+    .deadline {
+      font-size: 0.8rem;
+      color: var(--dark);
+    }
+    .expired {
+      color: var(--red);
+      font-weight: bold;
+    }
+    .level-container {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .progress-container {
+      flex-grow: 1;
+      height: 10px;
+      background: rgba(139,107,74,0.2);
+      border-radius: 5px;
+      margin-left: 10px;
+    }
+    .progress-bar {
+      height: 100%;
+      background: var(--gold);
+      border-radius: 5px;
+      transition: width 0.3s;
+    }
+    body::-webkit-scrollbar { display: none; }
+    body { -ms-overflow-style: none; scrollbar-width: none; }
+  </style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <h1>Quest Forge</h1>
+  </div>
+  <div class="content">
+    <div class="stats">
+      <div class="xp">XP: <span id="xpCount">0</span></div>
+      <div class="level">Level: <span id="levelCount">1</span></div>
+    </div>
+    
+    <div class="level-container">
+      <img id="levelImage" src="https://i.postimg.cc/cLxZvFgt/tent.png" class="level-img">
+      <div id="levelName">Tent Dweller</div>
+      <div class="progress-container">
+        <div id="levelProgress" class="progress-bar" style="width: 0%"></div>
+      </div>
+    </div>
+    
+    <div class="tabs">
+      <div class="tab active" onclick="switchTab('quests')">Quests</div>
+      <div class="tab" onclick="switchTab('shop')">Reward Shop</div>
+      <div class="tab" onclick="switchTab('completed')">Completed</div>
+      <div class="tab" onclick="switchTab('failed')">Failed</div>
+    </div>
+    
+    <div id="quests" class="tab-content active">
+      <div class="section">
+        <h3 class="section-title">New Quest</h3>
+        <input type="text" id="taskInput" placeholder="What's your quest?">
+        <input type="number" id="xpInput" placeholder="XP Reward" min="1">
+        <div style="display: flex; gap: 8px;">
+          <input type="number" id="hoursInput" placeholder="Hours" min="0" style="width: 50%;">
+          <input type="number" id="minutesInput" placeholder="Minutes" min="0" style="width: 50%;">
+        </div>
+        <input type="number" id="penaltyInput" placeholder="XP Penalty" min="0">
+        <button class="add-btn" onclick="addTask()">Add Quest</button>
+      </div>
+      
+      <div class="section">
+        <h3 class="section-title">Active Quests</h3>
+        <div id="taskList"></div>
+      </div>
+    </div>
+    
+    <div id="shop" class="tab-content">
+      <div class="section">
+        <h3 class="section-title">Reward Shop</h3>
+        <div id="rewardList"></div>
+      </div>
+    </div>
+    
+    <div id="completed" class="tab-content">
+      <div class="section">
+        <h3 class="section-title">Completed Quests</h3>
+        <div id="completedList"></div>
+      </div>
+    </div>
+    
+    <div id="failed" class="tab-content">
+      <div class="section">
+        <h3 class="section-title">Failed Quests</h3>
+        <div id="failedList"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// Game State
+// Game State
+let state = {
+  xp: 0,
+  level: 1,
+  tasks: [],
+  completed: [],
+  failed: [],
+  lastReset: new Date().toDateString(),
+  tasksCompletedThisLevel: 0  // Changed from completedToday to tasksCompletedThisLevel
+};
+
+// Level data - now tracks total tasks needed to reach each level
+const levels = [
+  { 
+    name: "Tent Dweller", 
+    image: "https://i.postimg.cc/cLxZvFgt/tent.png",
+    totalTasksNeeded: 0  // Level 1 is starting point
+  },
+  { 
+    name: "Farmhouse Owner", 
+    image: "https://i.postimg.cc/JnkCfggv/Farm.png",
+    totalTasksNeeded: 1  // 1 task to reach level 2
+  },
+  { 
+    name: "House Resident", 
+    image: "https://i.postimg.cc/XYsWd9dH/House.png",
+    totalTasksNeeded: 3  // 1 (for lvl2) + 2 = 3 total
+  },
+  { 
+    name: "Mansion Lord", 
+    image: "https://i.postimg.cc/SKjhrjGy/Mansion.png",
+    totalTasksNeeded: 6  // 3 + 3 = 6 total
+  },
+  { 
+    name: "Castle Ruler", 
+    image: "https://i.postimg.cc/yN5zrBf0/Castle.png",
+    totalTasksNeeded: 10 // 6 + 4 = 10 total
+  }
+];
+
+// Predefined rewards (converting XP to rewards)
+const rewards = [
+  { name: "Fidget Toy", cost: 50 },
+  { name: "Favorite Snack", cost: 100 },
+  { name: "Gaming Time (30min)", cost: 150 },
+  { name: "Special Treat", cost: 200 },
+  { name: "Guilt-Free Day Off", cost: 500 }
+];
+
+// Load saved state - modified to handle new structure
+function loadState() {
+  const saved = localStorage.getItem('questForge');
+  if (saved) {
+    const parsed = JSON.parse(saved);
+    // Check if we need to reset daily progress
+    if (parsed.lastReset !== new Date().toDateString()) {
+      state = {
+        ...parsed,
+        level: 1,
+        tasksCompletedThisLevel: 0,
+        lastReset: new Date().toDateString()
+      };
+    } else {
+      state = parsed;
+    }
+  }
+  updateUI();
+  checkExpiredTasks();
+}
+
+
+// Save state
+function saveState() {
+  localStorage.setItem('questForge', JSON.stringify(state));
+}
+
+// Updated UI to show proper progress
+function updateUI() {
+  document.getElementById('xpCount').textContent = state.xp;
+  document.getElementById('levelCount').textContent = state.level;
+  
+  // Update level display
+  const currentLevel = levels[state.level - 1] || levels[levels.length - 1];
+  const nextLevel = levels[state.level] || levels[levels.length - 1];
+  document.getElementById('levelName').textContent = currentLevel.name;
+  document.getElementById('levelImage').src = currentLevel.image;
+  
+  // Calculate progress correctly
+  const totalTasksForNextLevel = nextLevel.totalTasksNeeded;
+  const totalTasksForCurrentLevel = levels[state.level-1].totalTasksNeeded;
+  const tasksNeededForNextLevel = totalTasksForNextLevel - totalTasksForCurrentLevel;
+  
+  let progress = 0;
+  if (state.level < levels.length) {
+    progress = state.tasksCompletedThisLevel / tasksNeededForNextLevel * 100;
+  } else {
+    progress = 100; // Max level reached
+  }
+  
+  document.getElementById('levelProgress').style.width = `${Math.min(progress, 100)}%`;
+  
+  
+  // Active tasks
+  const taskList = document.getElementById('taskList');
+  taskList.innerHTML = '';
+  state.tasks.forEach((task, index) => {
+    const taskEl = document.createElement('div');
+    taskEl.className = 'task';
+    
+    const deadlineText = task.deadline ? 
+      `<div class="deadline ${isTaskExpired(task) ? 'expired' : ''}">
+        Deadline: ${formatDeadline(task.deadline)}
+      </div>` : '';
+    
+    taskEl.innerHTML = `
+      <div>
+        <strong>${task.name}</strong>
+        <div>+${task.xp} XP ${task.penalty ? `| Penalty: ${task.penalty} XP` : ''}</div>
+        ${deadlineText}
+      </div>
+      <button class="complete-btn" onclick="completeTask(${index})">Complete!</button>
+    `;
+    taskList.appendChild(taskEl);
+  });
+  
+  // Reward shop
+  const rewardList = document.getElementById('rewardList');
+  rewardList.innerHTML = '';
+  rewards.forEach((reward, index) => {
+    const rewardEl = document.createElement('div');
+    rewardEl.className = 'reward';
+    rewardEl.innerHTML = `
+      <div style="flex-grow: 1;">
+        <strong>${reward.name}</strong>
+        <div>${reward.cost} XP</div>
+      </div>
+      <button class="buy-btn" onclick="buyReward(${index})" ${state.xp < reward.cost ? 'disabled' : ''}>
+        Buy
+      </button>
+    `;
+    rewardList.appendChild(rewardEl);
+  });
+  
+  // Completed tasks
+  const completedList = document.getElementById('completedList');
+  completedList.innerHTML = '';
+  state.completed.forEach((task, index) => {
+    const taskEl = document.createElement('div');
+    taskEl.className = 'task';
+    taskEl.innerHTML = `
+      <div>
+        <strong>${task.name}</strong>
+        <div>+${task.xp} XP • ${new Date(task.completedAt).toLocaleString()}</div>
+      </div>
+    `;
+    completedList.appendChild(taskEl);
+  });
+  
+  // Failed tasks
+  const failedList = document.getElementById('failedList');
+  failedList.innerHTML = '';
+  state.failed.forEach((task, index) => {
+    const taskEl = document.createElement('div');
+    taskEl.className = 'task';
+    taskEl.innerHTML = `
+      <div>
+        <strong>${task.name}</strong>
+        <div>Penalty: ${task.penalty} XP • ${new Date(task.failedAt).toLocaleString()}</div>
+      </div>
+    `;
+    failedList.appendChild(taskEl);
+  });
+}
+
+// Format deadline for display
+function formatDeadline(timestamp) {
+  const now = new Date();
+  const deadline = new Date(timestamp);
+  const diff = deadline - now;
+  
+  if (diff <= 0) return "Expired!";
+  
+  const hours = Math.floor(diff / (1000 * 60 * 60));
+  const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+  
+  return `${hours}h ${minutes}m left`;
+}
+
+// Check if task is expired
+function isTaskExpired(task) {
+  if (!task.deadline) return false;
+  return new Date() > new Date(task.deadline);
+}
+
+// Check for expired tasks
+function checkExpiredTasks() {
+  const now = new Date();
+  let needsUpdate = false;
+  
+  state.tasks = state.tasks.filter(task => {
+    if (task.deadline && new Date(task.deadline) < now) {
+      state.xp = Math.max(0, state.xp - (task.penalty || 0));
+      state.failed.push({
+        ...task,
+        failedAt: new Date().toISOString()
+      });
+      needsUpdate = true;
+      return false;
+    }
+    return true;
+  });
+  
+  if (needsUpdate) {
+    saveState();
+    updateUI();
+  }
+}
+
+// Add new task
+function addTask() {
+  const name = document.getElementById('taskInput').value.trim();
+  const xp = parseInt(document.getElementById('xpInput').value);
+  const hours = parseInt(document.getElementById('hoursInput').value) || 0;
+  const minutes = parseInt(document.getElementById('minutesInput').value) || 0;
+  const penalty = parseInt(document.getElementById('penaltyInput').value) || 0;
+  
+  if (name && xp > 0) {
+    const now = new Date();
+    const deadline = hours > 0 || minutes > 0 ? 
+      new Date(now.getTime() + (hours * 60 * 60 * 1000) + (minutes * 60 * 1000)).getTime() : 
+      null;
+    
+    state.tasks.push({ 
+      name, 
+      xp, 
+      deadline,
+      penalty,
+      addedAt: now.toISOString()
+    });
+    
+    document.getElementById('taskInput').value = '';
+    document.getElementById('xpInput').value = '';
+    document.getElementById('hoursInput').value = '';
+    document.getElementById('minutesInput').value = '';
+    document.getElementById('penaltyInput').value = '';
+    
+    saveState();
+    updateUI();
+  }
+}
+
+// Modified completeTask function to handle proper level progression
+function completeTask(index) {
+  const task = state.tasks[index];
+  state.xp += task.xp;
+  state.tasksCompletedThisLevel++;
+  
+  // Check if we've completed enough tasks to level up
+  if (state.level < levels.length) {
+    const nextLevel = levels[state.level];
+    const tasksNeeded = nextLevel.totalTasksNeeded - levels[state.level-1].totalTasksNeeded;
+    
+    if (state.tasksCompletedThisLevel >= tasksNeeded) {
+      state.level++;
+      state.tasksCompletedThisLevel = 0; // Reset counter for new level
+      alert(`Level Up! You're now ${levels[state.level - 1].name}!`);
+    }
+  }
+  
+  state.completed.push({
+    ...task,
+    completedAt: new Date().toISOString()
+  });
+  state.tasks.splice(index, 1);
+  saveState();
+  updateUI();
+  
+  // Celebration effect
+  const xpDisplay = document.getElementById('xpCount');
+  xpDisplay.style.transform = 'scale(1.5)';
+  xpDisplay.style.color = 'var(--gold)';
+  setTimeout(() => {
+    xpDisplay.style.transform = '';
+    xpDisplay.style.color = '';
+  }, 500);
+}
+
+// Buy reward
+function buyReward(index) {
+  const reward = rewards[index];
+  if (state.xp >= reward.cost) {
+    state.xp -= reward.cost;
+    saveState();
+    updateUI();
+    alert(`You redeemed ${reward.name}! Enjoy your reward!`);
+  }
+}
+
+// Switch tabs
+function switchTab(tabId) {
+  document.querySelectorAll('.tab').forEach(tab => {
+    tab.classList.remove('active');
+  });
+  document.querySelectorAll('.tab-content').forEach(content => {
+    content.classList.remove('active');
+  });
+  
+  document.querySelector(`.tab[onclick="switchTab('${tabId}')"]`).classList.add('active');
+  document.getElementById(tabId).classList.add('active');
+}
+
+// Initialize
+loadState();
+
+// Check for expired tasks every minute
+setInterval(checkExpiredTasks, 60000);
+</script>
+</body>
+</html>
