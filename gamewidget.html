@@ -4,7 +4,7 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Quest Forge</title>
-  <style>
+<style>
     @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500&family=Quicksand:wght@500&display=swap');
     :root {
       --brown: #8B6B4A;
@@ -97,15 +97,15 @@
       background: var(--dark);
       color: white;
     }
-  input, select, textarea {
-  box-sizing: border-box; /* Add this line first */
-  padding: 6px 12px;
-  border-radius: 6px;
-  border: 1px solid var(--light);
-  width: 100%;
-  margin-bottom: 8px;
-  font-family: inherit;
-}
+    input, select, textarea {
+      box-sizing: border-box;
+      padding: 6px 12px;
+      border-radius: 6px;
+      border: 1px solid var(--light);
+      width: 100%;
+      margin-bottom: 8px;
+      font-family: inherit;
+    }
     .task, .reward {
       padding: 8px;
       margin-bottom: 8px;
@@ -139,6 +139,7 @@
     }
     .tab-content {
       display: none;
+      min-height: 500px; /* Unified height for all tabs */
     }
     .tab-content.active {
       display: block;
@@ -171,9 +172,6 @@
     }
     body::-webkit-scrollbar { display: none; }
     body { -ms-overflow-style: none; scrollbar-width: none; }
-
-    
-    /* Add these new rules at the end of the style section */
     .hour-minute-container {
       display: flex;
       gap: 8px;
@@ -181,44 +179,29 @@
     .hour-minute-container input {
       width: calc(50% - 4px);
     }
-
-    /* Add this new style for scrollable sections */
-.scrollable-section {
-  max-height: 200px; /* Adjust height as needed */
-  overflow-y: auto;
-  border: 1px solid var(--light);
-  border-radius: 8px;
-  padding: 5px;
-  margin-top: 10px;
-}
-
-/* Custom scrollbar styling */
-.scrollable-section::-webkit-scrollbar {
-  width: 6px;
-}
-.scrollable-section::-webkit-scrollbar-track {
-  background: rgba(139,107,74,0.1);
-}
-.scrollable-section::-webkit-scrollbar-thumb {
-  background: var(--brown);
-  border-radius: 4px;
-}
-    /* Add this to your style section */
-.tab-content {
-  min-height: 400px; /* Adjust this value to match your Quests tab height */
-}
-
-.tab-content > .section {
-  min-height: calc(100% - 30px); /* Adjust padding/margins */
-  box-sizing: border-box;
-}
-      /* ADD THE EXPIRED TASK STYLE HERE */
-  .expired-task {
-    background-color: rgba(211, 47, 47, 0.1);
-    border-left: 3px solid var(--red);
-  }
-    
-  </style>
+    .scrollable-section {
+      height: 400px; /* Fixed height for all scrollable areas */
+      overflow-y: auto;
+      border: 1px solid var(--light);
+      border-radius: 8px;
+      padding: 5px;
+      margin-top: 10px;
+    }
+    .scrollable-section::-webkit-scrollbar {
+      width: 6px;
+    }
+    .scrollable-section::-webkit-scrollbar-track {
+      background: rgba(139,107,74,0.1);
+    }
+    .scrollable-section::-webkit-scrollbar-thumb {
+      background: var(--brown);
+      border-radius: 4px;
+    }
+    .expired-task {
+      background-color: rgba(211, 47, 47, 0.1);
+      border-left: 3px solid var(--red);
+    }
+</style>
 </head>
 <body>
 <div class="container">
@@ -266,34 +249,31 @@
         </div>
       </div>
     </div>
-<!-- Reward Shop Tab -->
-<div id="shop" class="tab-content">
-  <div class="section" style="min-height: 400px;"> <!-- Adjust height as needed -->
-    <h3 class="section-title">Reward Shop</h3>
-    <div class="scrollable-section">
-      <div id="rewardList"></div>
-    </div>
-  </div>
-</div>
-<!-- Completed Tab -->
-<div id="completed" class="tab-content">
-  <div class="section" style="min-height: 400px;"> <!-- Same height as above -->
-    <h3 class="section-title">Completed Quests</h3>
-    <div class="scrollable-section">
-      <div id="completedList"></div>
-    </div>
-  </div>
-</div>
     
-<!-- Failed Tab -->
-<div id="failed" class="tab-content">
-  <div class="section" style="min-height: 400px;"> <!-- Same height as above -->
-    <h3 class="section-title">Failed Quests</h3>
-    <div class="scrollable-section">
-      <div id="failedList"></div>
+    <div id="shop" class="tab-content">
+      <div class="section">
+        <h3 class="section-title">Reward Shop</h3>
+        <div class="scrollable-section">
+          <div id="rewardList"></div>
+        </div>
+      </div>
     </div>
-  </div>
-</div>
+    
+    <div id="completed" class="tab-content">
+      <div class="section">
+        <h3 class="section-title">Completed Quests</h3>
+        <div class="scrollable-section">
+          <div id="completedList"></div>
+        </div>
+      </div>
+    </div>
+    
+    <div id="failed" class="tab-content">
+      <div class="section">
+        <h3 class="section-title">Failed Quests</h3>
+        <div class="scrollable-section">
+          <div id="failedList"></div>
+        </div>
       </div>
     </div>
   </div>
