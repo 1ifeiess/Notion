@@ -203,6 +203,20 @@
   background: var(--brown);
   border-radius: 4px;
 }
+    /* Add this to your style section */
+.tab-content {
+  min-height: 400px; /* Adjust this value to match your Quests tab height */
+}
+
+.tab-content > .section {
+  min-height: calc(100% - 30px); /* Adjust padding/margins */
+  box-sizing: border-box;
+}
+      /* ADD THE EXPIRED TASK STYLE HERE */
+  .expired-task {
+    background-color: rgba(211, 47, 47, 0.1);
+    border-left: 3px solid var(--red);
+  }
     
   </style>
 </head>
@@ -248,8 +262,8 @@
       <div class="section">
         <h3 class="section-title">Active Quests</h3>
         <div class="scrollable-section">
-  <div id="taskList"></div>
-</div>
+          <div id="taskList"></div>
+        </div>
       </div>
     </div>
     
@@ -257,8 +271,11 @@
       <div class="section">
         <h3 class="section-title">Reward Shop</h3>
         <div class="scrollable-section">
-  <div id="rewardList"></div>
-</div>
+          <div id="rewardList"></div>
+        </div>
+      </div>
+      <div class="section" style="visibility: hidden; height: 154px;">
+        <!-- Empty spacer to match height -->
       </div>
     </div>
     
@@ -266,8 +283,11 @@
       <div class="section">
         <h3 class="section-title">Completed Quests</h3>
         <div class="scrollable-section">
-  <div id="completedList"></div>
-</div>
+          <div id="completedList"></div>
+        </div>
+      </div>
+      <div class="section" style="visibility: hidden; height: 154px;">
+        <!-- Empty spacer to match height -->
       </div>
     </div>
     
@@ -275,13 +295,17 @@
       <div class="section">
         <h3 class="section-title">Failed Quests</h3>
         <div class="scrollable-section">
-  <div id="failedList"></div>
-</div>
+          <div id="failedList"></div>
+        </div>
+      </div>
+      <div class="section" style="visibility: hidden; height: 154px;">
+        <!-- Empty spacer to match height -->
       </div>
     </div>
   </div>
 </div>
 
+  
 <script>
 // Game State
 // Game State
@@ -386,28 +410,40 @@ function updateUI() {
   document.getElementById('levelProgress').style.width = `${Math.min(progress, 100)}%`;
   
   
-  // Active tasks
-  const taskList = document.getElementById('taskList');
-  taskList.innerHTML = '';
-  state.tasks.forEach((task, index) => {
-    const taskEl = document.createElement('div');
-    taskEl.className = 'task';
-    
-    const deadlineText = task.deadline ? 
-      `<div class="deadline ${isTaskExpired(task) ? 'expired' : ''}">
-        Deadline: ${formatDeadline(task.deadline)}
-      </div>` : '';
-    
-    taskEl.innerHTML = `
-      <div>
-        <strong>${task.name}</strong>
-        <div>+${task.xp} XP ${task.penalty ? `| Penalty: ${task.penalty} XP` : ''}</div>
-        ${deadlineText}
-      </div>
-      <button class="complete-btn" onclick="completeTask(${index})">Complete!</button>
-    `;
-    taskList.appendChild(taskEl);
-  });
+// Active tasks - MODIFY THIS SECTION
+const taskList = document.getElementById('taskList');
+taskList.innerHTML = '';
+
+// Sort tasks by urgency (closest deadline first)
+const sortedTasks = [...state.tasks].sort((a, b) => {
+  if (!a.deadline && !b.deadline) return 0;
+  if (!a.deadline) return 1; // No deadline goes last
+  if (!b.deadline) return -1;
+  return a.deadline - b.deadline; // Soonest first
+});
+
+sortedTasks.forEach((task, index) => {
+  // Find original index for completeTask function
+  const originalIndex = state.tasks.indexOf(task);
+  
+  const taskEl = document.createElement('div');
+  taskEl.className = `task ${isTaskExpired(task) ? 'expired-task' : ''}`;
+  
+  const deadlineText = task.deadline ? 
+    `<div class="deadline ${isTaskExpired(task) ? 'expired' : ''}">
+      Deadline: ${formatDeadline(task.deadline)}
+    </div>` : '';
+  
+  taskEl.innerHTML = `
+    <div>
+      <strong>${task.name}</strong>
+      <div>+${task.xp} XP ${task.penalty ? `| Penalty: ${task.penalty} XP` : ''}</div>
+      ${deadlineText}
+    </div>
+    <button class="complete-btn" onclick="completeTask(${originalIndex})">Complete!</button>
+  `;
+  taskList.appendChild(taskEl);
+});
   
   // Reward shop
   const rewardList = document.getElementById('rewardList');
