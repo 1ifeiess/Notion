@@ -181,6 +181,28 @@
     .hour-minute-container input {
       width: calc(50% - 4px);
     }
+
+    /* Add this new style for scrollable sections */
+.scrollable-section {
+  max-height: 200px; /* Adjust height as needed */
+  overflow-y: auto;
+  border: 1px solid var(--light);
+  border-radius: 8px;
+  padding: 5px;
+  margin-top: 10px;
+}
+
+/* Custom scrollbar styling */
+.scrollable-section::-webkit-scrollbar {
+  width: 6px;
+}
+.scrollable-section::-webkit-scrollbar-track {
+  background: rgba(139,107,74,0.1);
+}
+.scrollable-section::-webkit-scrollbar-thumb {
+  background: var(--brown);
+  border-radius: 4px;
+}
     
   </style>
 </head>
@@ -225,28 +247,36 @@
       
       <div class="section">
         <h3 class="section-title">Active Quests</h3>
-        <div id="taskList"></div>
+        <div class="scrollable-section">
+  <div id="taskList"></div>
+</div>
       </div>
     </div>
     
     <div id="shop" class="tab-content">
       <div class="section">
         <h3 class="section-title">Reward Shop</h3>
-        <div id="rewardList"></div>
+        <div class="scrollable-section">
+  <div id="rewardList"></div>
+</div>
       </div>
     </div>
     
     <div id="completed" class="tab-content">
       <div class="section">
         <h3 class="section-title">Completed Quests</h3>
-        <div id="completedList"></div>
+        <div class="scrollable-section">
+  <div id="completedList"></div>
+</div>
       </div>
     </div>
     
     <div id="failed" class="tab-content">
       <div class="section">
         <h3 class="section-title">Failed Quests</h3>
-        <div id="failedList"></div>
+        <div class="scrollable-section">
+  <div id="failedList"></div>
+</div>
       </div>
     </div>
   </div>
