@@ -185,7 +185,7 @@
   height: 100px; /* Adjust ONLY Active Quests height */
 }
     .scrollable-section {
-      height: 350px; /* Fixed height for all scrollable areas */
+      height: 380px; /* Fixed height for all scrollable areas */
       overflow-y: auto;
       border: 1px solid var(--light);
       border-radius: 8px;
@@ -206,6 +206,13 @@
       background-color: rgba(211, 47, 47, 0.1);
       border-left: 3px solid var(--red);
     }
+
+  /* Add this to your CSS */
+#taskInput, #xpInput, #hoursInput, #minutesInput, #penaltyInput {
+  font-weight: bold; /* Makes text bold */
+  font-size: 1.1rem; /* Slightly bigger text */
+  font-family: 'Quicksand', sans-serif; /* More readable for inputs */
+}
 </style>
 </head>
 <body>
@@ -236,16 +243,19 @@
     
     <div id="quests" class="tab-content active">
       <div class="section">
-        <h3 class="section-title">New Quest</h3>
-        <input type="text" id="taskInput" placeholder="What's your quest?">
-        <input type="number" id="xpInput" placeholder="XP Reward" min="1">
-        <div class="hour-minute-container">
-          <input type="number" id="hoursInput" placeholder="Hours" min="0">
-          <input type="number" id="minutesInput" placeholder="Minutes" min="0">
-        </div>
-        <input type="number" id="penaltyInput" placeholder="XP Penalty" min="0">
-        <button class="add-btn" onclick="addTask()">Add Quest</button>
-      </div>
+  <h3 class="section-title">New Quest</h3>
+  <input type="text" id="taskInput" placeholder="What's your quest?">
+  <!-- MODIFY THESE 4 INPUTS BELOW -->
+  <input type="number" id="xpInput" placeholder="XP Reward" min="1" onkeydown="return event.keyCode !== 69">
+  <div class="hour-minute-container">
+    <input type="number" id="hoursInput" placeholder="Hours" min="0" onkeydown="return event.keyCode !== 69">
+    <input type="number" id="minutesInput" placeholder="Minutes" min="0" onkeydown="return event.keyCode !== 69">
+  </div>
+  <input type="number" id="penaltyInput" placeholder="XP Penalty" min="0" onkeydown="return event.keyCode !== 69">
+  <!-- END OF MODIFIED INPUTS -->
+  <button class="add-btn" onclick="addTask()">Add Quest</button>
+</div>
+      
       
       <div class="section">
         <h3 class="section-title">Active Quests</h3>
