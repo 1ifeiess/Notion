@@ -1,0 +1,1034 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Focus Forge - Productivity Dashboard</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --brown: #8B6B4A;
+      --cream: #F5F0E6;
+      --dark: #5D4037;
+      --light: #A1887F;
+      --gold: #D4AF37;
+      --red: #D32F2F;
+      --war-dark: #2c1e1e;
+      --war-red: #c53030;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    body {
+      background: linear-gradient(135deg, #3a2828 0%, #1a1212 100%);
+      color: #F5F0E6;
+      min-height: 100vh;
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    
+    .dashboard-container {
+      width: 100%;
+      max-width: 1000px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+    
+    @media (max-width: 900px) {
+      .dashboard-container {
+        grid-template-columns: 1fr;
+      }
+    }
+    
+    .panel {
+      background: rgba(255, 253, 245, 0.95);
+      border: 3px solid var(--gold);
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+      overflow: hidden;
+      color: var(--dark);
+    }
+    
+    .panel-header {
+      background: linear-gradient(to right, var(--war-dark), var(--brown));
+      padding: 15px;
+      text-align: center;
+      border-bottom: 3px solid var(--gold);
+      position: relative;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .panel-title {
+      font-size: 1.5rem;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: var(--gold);
+      font-weight: 900;
+    }
+    
+    .toggle-btn {
+      background: rgba(255, 255, 255, 0.2);
+      border: none;
+      color: var(--cream);
+      padding: 5px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+    
+    /* Pomodoro Timer Styles */
+    .pomodoro-panel {
+      grid-column: 1;
+    }
+    
+    .timer-content {
+      padding: 20px;
+    }
+    
+    .tracker {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 15px;
+      background: rgba(139, 107, 74, 0.08);
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px dashed var(--light);
+    }
+    
+    .day, .streak {
+      font-family: 'Quicksand', sans-serif;
+      text-align: center;
+    }
+    
+    .day { 
+      font-size: 1.2rem;
+      color: var(--dark);
+    }
+    
+    .streak { 
+      font-size: 0.9rem; 
+      color: var(--brown); 
+    }
+    
+    .timer {
+      font-size: 3rem;
+      font-weight: 600;
+      margin: 20px 0;
+      font-family: 'Quicksand', sans-serif;
+      text-align: center;
+      color: var(--dark);
+    }
+    
+    .controls, .dropdowns {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin: 15px 0;
+    }
+    
+    button {
+      padding: 8px 15px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+    
+    .start { 
+      background: var(--brown); 
+      color: white; 
+    }
+    
+    .pause { 
+      background: var(--light); 
+      color: white; 
+    }
+    
+    .reset { 
+      background: var(--dark); 
+      color: white; 
+    }
+    
+    select {
+      padding: 8px 15px;
+      border-radius: 6px;
+      border: 1px solid var(--light);
+      background: white;
+      font-size: 1rem;
+    }
+    
+    .sounds {
+      background: white;
+      border-radius: 8px;
+      padding: 15px;
+      border: 1px solid var(--light);
+      margin-top: 20px;
+      display: none; /* Hidden by default */
+    }
+    
+    .sounds-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+    
+    .sound-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 10px;
+    }
+    
+    .sound-control {
+      padding: 10px;
+      border-radius: 6px;
+      border: 1px solid rgba(139, 107, 74, 0.2);
+      background: rgba(139, 107, 74, 0.05);
+    }
+    
+    .sound-label {
+      display: flex;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+    
+    .sound-checkbox {
+      margin-right: 8px;
+      accent-color: var(--brown);
+    }
+    
+    .sound-slider {
+      width: 100%;
+      height: 5px;
+      -webkit-appearance: none;
+      background: rgba(139, 107, 74, 0.2);
+      border-radius: 3px;
+    }
+    
+    .sound-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: var(--brown);
+    }
+    
+    /* Quest Forge Styles */
+    .quest-panel {
+      grid-column: 2;
+    }
+    
+    @media (max-width: 900px) {
+      .quest-panel {
+        grid-column: 1;
+      }
+    }
+    
+    .quest-content {
+      padding: 15px;
+    }
+    
+    .stats {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 15px;
+      background: rgba(139, 107, 74, 0.08);
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px dashed var(--light);
+    }
+    
+    .xp {
+      font-family: 'Quicksand', sans-serif;
+      text-align: center;
+      font-size: 1.2rem;
+    }
+    
+    .level {
+      font-family: 'Quicksand', sans-serif;
+      text-align: center;
+      font-size: 1.2rem;
+      color: var(--gold);
+    }
+    
+    .section {
+      background: white;
+      border-radius: 8px;
+      padding: 15px;
+      margin-bottom: 15px;
+      border: 1px solid var(--light);
+    }
+    
+    .section-title {
+      margin-top: 0;
+      border-bottom: 1px solid var(--light);
+      padding-bottom: 5px;
+      color: var(--dark);
+    }
+    
+    .add-btn { 
+      background: var(--brown); 
+      color: white; 
+      margin-top: 10px;
+    }
+    
+    .complete-btn {
+      background: var(--gold);
+      color: var(--dark);
+    }
+    
+    .buy-btn {
+      background: var(--dark);
+      color: white;
+    }
+    
+    input, select {
+      box-sizing: border-box;
+      padding: 8px 12px;
+      border-radius: 6px;
+      border: 1px solid var(--light);
+      width: 100%;
+      margin-bottom: 10px;
+    }
+    
+    .task, .reward {
+      padding: 10px;
+      margin-bottom: 10px;
+      border-radius: 6px;
+      border: 1px solid rgba(139, 107, 74, 0.2);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .level-container {
+      display: flex;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+    
+    .level-img {
+      width: 40px;
+      height: 40px;
+      object-fit: cover;
+      border-radius: 4px;
+      margin-right: 10px;
+    }
+    
+    .progress-container {
+      flex-grow: 1;
+      height: 10px;
+      background: rgba(139, 107, 74, 0.2);
+      border-radius: 5px;
+      margin-left: 10px;
+    }
+    
+    .progress-bar {
+      height: 100%;
+      background: var(--gold);
+      border-radius: 5px;
+      transition: width 0.3s;
+    }
+    
+    .tabs {
+      display: flex;
+      margin-bottom: 15px;
+      overflow-x: auto;
+      border-bottom: 1px solid var(--light);
+    }
+    
+    .tab {
+      padding: 8px 15px;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      white-space: nowrap;
+    }
+    
+    .tab.active {
+      border-bottom: 2px solid var(--brown);
+      font-weight: bold;
+    }
+    
+    .tab-content {
+      display: none;
+    }
+    
+    .tab-content.active {
+      display: block;
+    }
+    
+    .deadline {
+      font-size: 0.8rem;
+      color: var(--dark);
+    }
+    
+    .expired {
+      color: var(--red);
+      font-weight: bold;
+    }
+    
+    .hour-minute-container {
+      display: flex;
+      gap: 8px;
+    }
+    
+    .hour-minute-container input {
+      width: calc(50% - 4px);
+    }
+    
+    .scrollable-section {
+      height: 250px;
+      overflow-y: auto;
+      border: 1px solid var(--light);
+      border-radius: 8px;
+      padding: 10px;
+      margin-top: 10px;
+    }
+    
+    .expired-task {
+      background-color: rgba(211, 47, 47, 0.1);
+      border-left: 3px solid var(--red);
+    }
+    
+    /* Custom scrollbars */
+    .scrollable-section::-webkit-scrollbar {
+      width: 6px;
+    }
+    
+    .scrollable-section::-webkit-scrollbar-track {
+      background: rgba(139, 107, 74, 0.1);
+    }
+    
+    .scrollable-section::-webkit-scrollbar-thumb {
+      background: var(--brown);
+      border-radius: 4px;
+    }
+    
+    /* Animation for timer */
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+    
+    .timer-pulse {
+      animation: pulse 1s infinite;
+    }
+  </style>
+</head>
+<body>
+  <div class="dashboard-container">
+    <!-- Pomodoro Timer Panel -->
+    <div class="panel pomodoro-panel">
+      <div class="panel-header">
+        <div class="panel-title">
+          <i class="fas fa-hourglass-half"></i> Focus Timer
+        </div>
+        <button class="toggle-btn" id="toggleSounds">
+          <i class="fas fa-music"></i> Toggle Sounds
+        </button>
+      </div>
+      <div class="timer-content">
+        <div class="tracker" id="trackerCard">
+          <div class="day">DAY <span id="dayCount">0</span></div>
+          <div class="streak">STREAK <span id="streakCount">0</span></div>
+        </div>
+        
+        <div class="timer" id="timer">25:00</div>
+        
+        <div class="controls">
+          <button class="start" onclick="startTimer()">
+            <i class="fas fa-play"></i> Start
+          </button>
+          <button class="pause" onclick="pauseTimer()">
+            <i class="fas fa-pause"></i> Pause
+          </button>
+          <button class="reset" onclick="resetTimer()">
+            <i class="fas fa-redo"></i> Reset
+          </button>
+        </div>
+        
+        <div class="dropdowns">
+          <select id="durationSelect" onchange="updateDuration()">
+            <option value="1500">25 min</option>
+            <option value="300">5 min</option>
+            <option value="600">10 min</option>
+            <option value="1800">30 min</option>
+            <option value="2700">45 min</option>
+            <option value="2700">60 min</option>
+          </select>
+        </div>
+        
+        <div class="sounds" id="soundSection">
+          <div class="sounds-header">
+            <h3>Ambient Sound Mixer</h3>
+            <button onclick="resetAllSounds()">Reset All</button>
+          </div>
+          <div class="sound-grid" id="soundContainer"></div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Quest Forge Panel -->
+    <div class="panel quest-panel">
+      <div class="panel-header">
+        <div class="panel-title">
+          <i class="fas fa-scroll"></i> Quest Forge
+        </div>
+        <div class="panel-title">
+          Level: <span id="levelCount">1</span>
+        </div>
+      </div>
+      <div class="quest-content">
+        <div class="stats">
+          <div class="xp">XP: <span id="xpCount">0</span></div>
+          <div class="level">Trophies: <span id="trophiesCount">0</span></div>
+        </div>
+        
+        <div class="level-container">
+          <img id="levelImage" src="https://i.postimg.cc/cLxZvFgt/tent.png" class="level-img">
+          <div id="levelName">Tent Dweller</div>
+          <div class="progress-container">
+            <div id="levelProgress" class="progress-bar" style="width: 0%"></div>
+          </div>
+        </div>
+        
+        <div class="tabs">
+          <div class="tab active" onclick="switchTab('quests')">Quests</div>
+          <div class="tab" onclick="switchTab('shop')">Reward Shop</div>
+          <div class="tab" onclick="switchTab('completed')">Completed</div>
+          <div class="tab" onclick="switchTab('failed')">Failed</div>
+        </div>
+        
+        <div id="quests" class="tab-content active">
+          <div class="section">
+            <h3 class="section-title">New Quest</h3>
+            <input type="text" id="taskInput" placeholder="What's your quest?">
+            <input type="number" id="xpInput" placeholder="XP Reward" min="1">
+            <div class="hour-minute-container">
+              <input type="number" id="hoursInput" placeholder="Hours" min="0">
+              <input type="number" id="minutesInput" placeholder="Minutes" min="0">
+            </div>
+            <input type="number" id="penaltyInput" placeholder="XP Penalty" min="0">
+            <button class="add-btn" onclick="addTask()">Add Quest</button>
+          </div>
+          
+          <div class="section">
+            <h3 class="section-title">Active Quests</h3>
+            <div class="scrollable-section">
+              <div id="taskList"></div>
+            </div>
+          </div>
+        </div>
+        
+        <div id="shop" class="tab-content">
+          <div class="section">
+            <h3 class="section-title">Reward Shop</h3>
+            <div class="scrollable-section">
+              <div id="rewardList"></div>
+            </div>
+          </div>
+        </div>
+        
+        <div id="completed" class="tab-content">
+          <div class="section">
+            <h3 class="section-title">Completed Quests</h3>
+            <div class="scrollable-section">
+              <div id="completedList"></div>
+            </div>
+          </div>
+        </div>
+        
+        <div id="failed" class="tab-content">
+          <div class="section">
+            <h3 class="section-title">Failed Quests</h3>
+            <div class="scrollable-section">
+              <div id="failedList"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ===== POMODORO TIMER =====
+    let countdown, duration = 1500, timeLeft = duration;
+    const audioObjects = {};
+    let soundSectionVisible = false;
+    
+    // Day/streak tracker
+    const START_DATE = new Date();
+    const today = new Date();
+    const dayCount = Math.floor((today - START_DATE)/86400000)+1;
+    document.getElementById("dayCount").innerText = dayCount;
+    
+    const STORAGE_KEY = "habitTracker";
+    const data = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {lastDone: null, streak: 0};
+    const lastDone = data.lastDone ? new Date(data.lastDone) : null;
+    const yesterday = new Date(); yesterday.setDate(today.getDate()-1);
+    
+    if (!isSameDay(lastDone, today) && !isSameDay(lastDone, yesterday)) data.streak = 0;
+    document.getElementById("streakCount").innerText = data.streak;
+    
+    let clickCount = 0, clickTimer;
+    document.getElementById("trackerCard").addEventListener("click", () => {
+      clickCount++;
+      clearTimeout(clickTimer);
+      clickTimer = setTimeout(() => clickCount = 0, 600);
+      if (clickCount === 3) {
+        const newDate = new Date();
+        if (!isSameDay(lastDone, today)) {
+          data.streak = isSameDay(lastDone, yesterday) ? data.streak+1 : 1;
+          data.lastDone = newDate.toISOString();
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+          document.getElementById("streakCount").innerText = data.streak;
+          const tracker = document.getElementById("trackerCard");
+          tracker.style.backgroundColor = "rgba(139,107,74,0.15)";
+          setTimeout(() => tracker.style.backgroundColor = "", 300);
+        }
+        clickCount = 0;
+      }
+    });
+    
+    function isSameDay(d1, d2) { return d1?.toDateString() === d2?.toDateString(); }
+    
+    function updateTimerDisplay() {
+      const m = String(Math.floor(timeLeft/60)).padStart(2,'0');
+      const s = String(timeLeft%60).padStart(2,'0');
+      const timerEl = document.getElementById('timer');
+      timerEl.textContent = `${m}:${s}`;
+      
+      if(timeLeft <= 10) {
+        timerEl.classList.add('timer-pulse');
+        timerEl.style.color = '#D32F2F';
+      } else {
+        timerEl.classList.remove('timer-pulse');
+        timerEl.style.color = '';
+      }
+      
+      if(timeLeft === 0) {
+        pauseAllSounds();
+      }
+    }
+    
+    function startTimer() {
+      clearInterval(countdown);
+      countdown = setInterval(() => {
+        if(timeLeft <= 0) { 
+          clearInterval(countdown); 
+          timeLeft = duration; 
+          updateTimerDisplay(); 
+          return; 
+        }
+        timeLeft--; 
+        updateTimerDisplay();
+      }, 1000);
+    }
+    
+    function pauseTimer() { 
+      clearInterval(countdown); 
+      document.getElementById('timer').classList.remove('timer-pulse');
+    }
+    
+    function resetTimer() { 
+      clearInterval(countdown); 
+      timeLeft = duration; 
+      updateTimerDisplay(); 
+      document.getElementById('timer').classList.remove('timer-pulse');
+    }
+    
+    function updateDuration() { 
+      duration = parseInt(document.getElementById('durationSelect').value); 
+      resetTimer(); 
+    }
+    
+    // Toggle sound section
+    document.getElementById('toggleSounds').addEventListener('click', function() {
+      soundSectionVisible = !soundSectionVisible;
+      const soundSection = document.getElementById('soundSection');
+      soundSection.style.display = soundSectionVisible ? 'block' : 'none';
+    });
+    
+    // ===== SOUND PLAYER =====
+    const sounds = {
+      storm: {label:"Storm Wind", url:"https://www.dropbox.com/scl/fi/t0e1yst6ri2kgdeuvr4oz/winter-storm-winnd.-128kbit_AAC-Copy.mp3?rlkey=m3cjp379ormcq841b5mvic67f&dl=1"},
+      underwater: {label:"Underwater Noise", url:"https://www.dropbox.com/scl/fi/9wg6spf112pcoahl351xk/Underwater-deep-128kbit_AAC-Copy.mp3?rlkey=1w2ffm3skrfte7rmjttdtvjde&dl=1"},
+      brown: {label:"Brown Noise", url:"https://www.dropbox.com/scl/fi/2esrnlk5ww7g52dbjo7fl/Deep-Layered-Brown-Noise-1-Hour-128kbit_AAC.mp3?rlkey=o0ujag1fwuwudg67ent3gojdb&dl=1"},
+      fire: {label:"Fireplace Crack", url:"https://www.dropbox.com/scl/fi/lw1vtvg45nserdygf5ijr/1-hour-Fireplace-burning-Logs-relaxing-with-sound-160kbit_Opus.mp3?rlkey=gk3l9spzlo95jeym260v823sx&dl=1"},
+      pink1: {label:"Pink Noise", url:"https://www.dropbox.com/scl/fi/p839yniedfnvtnyrgx36a/Soothing-Deep-Pink-Noise-1-Hour-128kbit_AAC.mp3?rlkey=bqu0nd26xi2dlcv5kjz835hlt&dl=1"},
+      "40hz": {label:"40Hz Focus", url:"https://www.dropbox.com/scl/fi/dijox7y62pu9uetmis57v/Pure-40-HZ-Binaural-Beats-The-Frequency-for-FOCUS-MEMORY-and-CONCENTRATION-152kbit_Opus.mp3?rlkey=nhl8vemqqlra200anhm0akha3&dl=1"},
+      waves: {label:"Ocean Waves", url:"https://www.dropbox.com/scl/fi/dzlfgeot1wnmltr30a5d0/Ocean-Waves-Crashing-Relaxing-Sounds-Calming-Relaxation-Music-For-Sleeping-1-Hour-128kbit_AAC.mp3?rlkey=d1u1rvrsh33mxd5bt7dqdax85&dl=1"}
+    };
+    
+    const container = document.getElementById('soundContainer');
+    for (let key in sounds) {
+      const {label, url} = sounds[key];
+      const audio = new Audio(url);
+      audio.loop = true;
+      audio.volume = 0.5;
+      audioObjects[key] = audio;
+      container.innerHTML += `
+        <div class="sound-control">
+          <div class="sound-label">
+            <input type="checkbox" class="sound-checkbox" id="${key}-checkbox" onchange="toggleSound('${key}')">
+            <label for="${key}-checkbox">${label}</label>
+          </div>
+          <input type="range" min="0" max="1" step="0.01" value="0.5" class="sound-slider" oninput="setVolume('${key}', this.value)">
+        </div>
+      `;
+    }
+    
+    function toggleSound(key) {
+      const audio = audioObjects[key];
+      const checkbox = document.getElementById(`${key}-checkbox`);
+      checkbox.checked ? audio.play().catch(e=>console.warn(e)) : (audio.pause(), audio.currentTime = 0);
+    }
+    
+    function setVolume(key, vol) { audioObjects[key].volume = vol; }
+    function pauseAllSounds() { for(let key in audioObjects) { audioObjects[key].pause(); audioObjects[key].currentTime = 0; document.getElementById(`${key}-checkbox`).checked = false; } }
+    function resetAllSounds() { pauseAllSounds(); document.querySelectorAll('.sound-slider').forEach(s=>s.value=0.5); for(let key in audioObjects) audioObjects[key].volume = 0.5; }
+    
+    // Initialize sounds
+    document.body.addEventListener('click',()=>{
+      for(let key in audioObjects){
+        const a=audioObjects[key];
+        a.play().then(()=>{a.pause();a.currentTime=0}).catch(()=>{})
+      }
+    },{once:true});
+    
+    // ===== QUEST FORGE =====
+    let state = {
+      xp: 0,
+      level: 1,
+      tasks: [],
+      completed: [],
+      failed: [],
+      lastReset: new Date().toDateString(),
+      tasksCompletedThisLevel: 0
+    };
+    
+    const levels = [
+      { 
+        name: "Tent Dweller", 
+        image: "https://i.postimg.cc/cLxZvFgt/tent.png",
+        totalTasksNeeded: 0
+      },
+      { 
+        name: "Farmhouse Owner", 
+        image: "https://i.postimg.cc/JnkCfggv/Farm.png",
+        totalTasksNeeded: 1
+      },
+      { 
+        name: "House Resident", 
+        image: "https://i.postimg.cc/XYsWd9dH/House.png",
+        totalTasksNeeded: 3
+      },
+      { 
+        name: "Mansion Lord", 
+        image: "https://i.postimg.cc/SKjhrjGy/Mansion.png",
+        totalTasksNeeded: 6
+      },
+      { 
+        name: "Castle Ruler", 
+        image: "https://i.postimg.cc/yN5zrBf0/Castle.png",
+        totalTasksNeeded: 10
+      }
+    ];
+    
+    const rewards = [
+      { name: "Fidget Toy", cost: 50 },
+      { name: "Music (10min)", cost: 70 },
+      { name: "Favorite Snack", cost: 100 },
+      { name: "Gaming Time (30min)", cost: 150 },
+      { name: "Special Treat", cost: 200 },
+      { name: "Buy Something", cost: 250 },
+      { name: "Movie Night", cost: 300 },
+      { name: "Reading Night", cost: 400 },
+      { name: "Day Off", cost: 500 },
+    ];
+    
+    // Load saved state
+    function loadState() {
+      const saved = localStorage.getItem('questForge');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed.lastReset !== new Date().toDateString()) {
+          state = {
+            ...parsed,
+            level: 1,
+            tasksCompletedThisLevel: 0,
+            lastReset: new Date().toDateString()
+          };
+        } else {
+          state = parsed;
+        }
+      }
+      updateUI();
+      checkExpiredTasks();
+    }
+    
+    // Save state
+    function saveState() {
+      localStorage.setItem('questForge', JSON.stringify(state));
+    }
+    
+    // Update UI
+    function updateUI() {
+      document.getElementById('xpCount').textContent = state.xp;
+      document.getElementById('levelCount').textContent = state.level;
+      document.getElementById('trophiesCount').textContent = state.completed.length;
+      
+      const currentLevel = levels[state.level - 1] || levels[levels.length - 1];
+      const nextLevel = levels[state.level] || levels[levels.length - 1];
+      document.getElementById('levelName').textContent = currentLevel.name;
+      document.getElementById('levelImage').src = currentLevel.image;
+      
+      const totalTasksForNextLevel = nextLevel.totalTasksNeeded;
+      const totalTasksForCurrentLevel = levels[state.level-1].totalTasksNeeded;
+      const tasksNeededForNextLevel = totalTasksForNextLevel - totalTasksForCurrentLevel;
+      
+      let progress = 0;
+      if (state.level < levels.length) {
+        progress = state.tasksCompletedThisLevel / tasksNeededForNextLevel * 100;
+      } else {
+        progress = 100;
+      }
+      
+      document.getElementById('levelProgress').style.width = `${Math.min(progress, 100)}%`;
+      
+      // Active tasks
+      const taskList = document.getElementById('taskList');
+      taskList.innerHTML = '';
+      
+      const sortedTasks = [...state.tasks].sort((a, b) => {
+        if (!a.deadline && !b.deadline) return 0;
+        if (!a.deadline) return 1;
+        if (!b.deadline) return -1;
+        return a.deadline - b.deadline;
+      });
+      
+      sortedTasks.forEach((task, index) => {
+        const originalIndex = state.tasks.indexOf(task);
+        const taskEl = document.createElement('div');
+        taskEl.className = `task ${isTaskExpired(task) ? 'expired-task' : ''}`;
+        
+        const deadlineText = task.deadline ? 
+          `<div class="deadline ${isTaskExpired(task) ? 'expired' : ''}">
+            Deadline: ${formatDeadline(task.deadline)}
+          </div>` : '';
+        
+        taskEl.innerHTML = `
+          <div>
+            <strong>${task.name}</strong>
+            <div>+${task.xp} XP ${task.penalty ? `| Penalty: ${task.penalty} XP` : ''}</div>
+            ${deadlineText}
+          </div>
+          <button class="complete-btn" onclick="completeTask(${originalIndex})">Complete!</button>
+        `;
+        taskList.appendChild(taskEl);
+      });
+      
+      // Reward shop
+      const rewardList = document.getElementById('rewardList');
+      rewardList.innerHTML = '';
+      rewards.forEach((reward, index) => {
+        const rewardEl = document.createElement('div');
+        rewardEl.className = 'reward';
+        rewardEl.innerHTML = `
+          <div style="flex-grow: 1;">
+            <strong>${reward.name}</strong>
+            <div>${reward.cost} XP</div>
+          </div>
+          <button class="buy-btn" onclick="buyReward(${index})" ${state.xp < reward.cost ? 'disabled' : ''}>
+            Buy
+          </button>
+        `;
+        rewardList.appendChild(rewardEl);
+      });
+      
+      // Completed tasks
+      const completedList = document.getElementById('completedList');
+      completedList.innerHTML = '';
+      state.completed.forEach((task, index) => {
+        const taskEl = document.createElement('div');
+        taskEl.className = 'task';
+        taskEl.innerHTML = `
+          <div>
+            <strong>${task.name}</strong>
+            <div>+${task.xp} XP • ${new Date(task.completedAt).toLocaleString()}</div>
+          </div>
+        `;
+        completedList.appendChild(taskEl);
+      });
+      
+      // Failed tasks
+      const failedList = document.getElementById('failedList');
+      failedList.innerHTML = '';
+      state.failed.forEach((task, index) => {
+        const taskEl = document.createElement('div');
+        taskEl.className = 'task';
+        taskEl.innerHTML = `
+          <div>
+            <strong>${task.name}</strong>
+            <div>Penalty: ${task.penalty} XP • ${new Date(task.failedAt).toLocaleString()}</div>
+          </div>
+        `;
+        failedList.appendChild(taskEl);
+      });
+    }
+    
+    // Format deadline
+    function formatDeadline(timestamp) {
+      const now = new Date();
+      const deadline = new Date(timestamp);
+      const diff = deadline - now;
+      
+      if (diff <= 0) return "Expired!";
+      
+      const hours = Math.floor(diff / (1000 * 60 * 60));
+      const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+      
+      return `${hours}h ${minutes}m left`;
+    }
+    
+    // Check if task is expired
+    function isTaskExpired(task) {
+      if (!task.deadline) return false;
+      return new Date() > new Date(task.deadline);
+    }
+    
+    // Check for expired tasks
+    function checkExpiredTasks() {
+      const now = new Date();
+      let needsUpdate = false;
+      
+      state.tasks = state.tasks.filter(task => {
+        if (task.deadline && new Date(task.deadline) < now) {
+          state.xp = Math.max(0, state.xp - (task.penalty || 0));
+          state.failed.push({
+            ...task,
+            failedAt: new Date().toISOString()
+          });
+          needsUpdate = true;
+          return false;
+        }
+        return true;
+      });
+      
+      if (needsUpdate) {
+        saveState();
+        updateUI();
+      }
+    }
+    
+    // Add new task
+    function addTask() {
+      const name = document.getElementById('taskInput').value.trim();
+      const xp = parseInt(document.getElementById('xpInput').value);
+      const hours = parseInt(document.getElementById('hoursInput').value) || 0;
+      const minutes = parseInt(document.getElementById('minutesInput').value) || 0;
+      const penalty = parseInt(document.getElementById('penaltyInput').value) || 0;
+      
+      if (name && xp > 0) {
+        const now = new Date();
+        const deadline = hours > 0 || minutes > 0 ? 
+          new Date(now.getTime() + (hours * 60 * 60 * 1000) + (minutes * 60 * 1000)).getTime() : 
+          null;
+        
+        state.tasks.push({ 
+          name, 
+          xp, 
+          deadline,
+          penalty,
+          addedAt: now.toISOString()
+        });
+        
+        document.getElementById('taskInput').value = '';
+        document.getElementById('xpInput').value = '';
+        document.getElementById('hoursInput').value = '';
+        document.getElementById('minutesInput').value = '';
+        document.getElementById('penaltyInput').value = '';
+        
+        saveState();
+        updateUI();
+      }
+    }
+    
+    // Complete a task
+    function completeTask(index) {
+      const task = state.tasks[index];
+      state.xp += task.xp;
+      state.tasksCompletedThisLevel++;
+      
+      if (state.level < levels.length) {
+        const nextLevel = levels[state.level];
+        const tasksNeeded = nextLevel.totalTasksNeeded - levels[state.level-1].totalTasksNeeded;
+        
+        if (state.tasksCompletedThisLevel >= tasksNeeded) {
+          state.level++;
+          state.tasksCompletedThisLevel = 0;
+          alert(`Level Up! You're now ${levels[state.level - 1].name}!`);
+        }
+      }
+      
+      state.completed.push({
+        ...task,
+        completedAt: new Date().toISOString()
+      });
+      state.tasks.splice(index, 1);
+      saveState();
+      updateUI();
+      
+      const xpDisplay = document.getElementById('xpCount');
+      xpDisplay.style.transform = 'scale(1.5)';
+      xpDisplay.style.color = 'var(--gold)';
+      setTimeout(() => {
+        xpDisplay.style.transform = '';
+        xpDisplay.style.color = '';
+      }, 500);
+    }
+    
+    // Buy reward
+    function buyReward(index) {
+      const reward = rewards[index];
+      if (state.xp >= reward.cost) {
+        state.xp -= reward.cost;
+        saveState();
+        updateUI();
+        alert(`You redeemed ${reward.name}! Enjoy your reward!`);
+      }
+    }
+    
+    // Switch tabs
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab').forEach(tab => {
+        tab.classList.remove('active');
+      });
+      document.querySelectorAll('.tab-content').forEach(content => {
+        content.classList.remove('active');
+      });
+      
+      document.querySelector(`.tab[onclick="switchTab('${tabId}')"]`).classList.add('active');
+      document.getElementById(tabId).classList.add('active');
+    }
+    
+    // Initialize
+    updateTimerDisplay();
+    loadState();
+    
+    // Check for expired tasks every minute
+    setInterval(checkExpiredTasks, 60000);
+  </script>
+</body>
+</html>
